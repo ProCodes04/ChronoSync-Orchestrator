@@ -1,8 +1,9 @@
 # ChronoSync ⚡️
+<img width="800" height="423" alt="ScreenRecording2026-08-31at2 17 56AM-ezgif com-video-to-gif-converter" src="https://github.com/user-attachments/assets/9c19c245-9565-436b-9e20-8b2cf660354f" />
 
 A horizontally scaled background job orchestrator that solves the "double execution" race condition using Redis distributed locks.
 
-![ChronoSync Demo](https://placehold.co/800x400/111/444?text=Drop+Your+Screen+Recording+GIF+Here)
+
 
 ## 🧠 The Problem
 When scaling worker nodes horizontally, traditional database polling breaks down. If multiple identical servers poll a PostgreSQL queue at the exact same millisecond, they will often fetch the same task and execute it simultaneously.
