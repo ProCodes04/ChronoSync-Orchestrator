@@ -1,4 +1,4 @@
-# ChronoSync ⚡️
+# ChronoSync CS
 
 A horizontally scaled background job orchestrator that solves the "double execution" race condition using Redis distributed locks.
 
