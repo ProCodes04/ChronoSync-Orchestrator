@@ -1,29 +1,24 @@
 # ChronoSync ⚡️
 
-Have you ever spun up a second backend worker node and suddenly realized your background tasks are executing twice? I built ChronoSync to explore and solve exactly that problem.
+A horizontally scaled background job orchestrator that solves the "double execution" race condition using Redis distributed locks.
 
-## The "Double Execution" Headache
-When scaling a Spring Boot application horizontally, traditional database polling gets messy. If three identical servers poll a PostgreSQL queue at the exact same millisecond, they will often fetch the same task. The result? Duplicate emails, double charges, or unpredictable race conditions.
 
-## How I Solved It
-To fix this, I introduced a **Redis Mutex Layer**.
+## 🧠 The Problem
+When scaling worker nodes horizontally, traditional database polling breaks down. If multiple identical servers poll a PostgreSQL queue at the exact same millisecond, they will often fetch the same task and execute it simultaneously.
 
-Now, when a task lands, the workers still observe the database—but before they are allowed to process anything, they race to acquire a cryptographic lock using Redis `SETNX` (Set if Not Exists).
+## 💡 The Solution
+ChronoSync introduces a **Redis Mutex Layer**. Multiple Spring Boot worker nodes safely poll the database, but before processing, they race to acquire a cryptographic lock using Redis `SETNX`.
+* **Atomic Guarantees:** Exactly one worker acquires the lock.
+* **Graceful Backoff:** Losing nodes immediately return to a sleep state.
+* **Durable State:** PostgreSQL tracks the lifecycle (`PENDING` → `PROCESSING` → `COMPLETE`).
 
-* **The Winner:** Grabs the lock, executes the job, and updates Postgres.
-* **The Runners-Up:** See that the lock is already held and gracefully go back to sleep.
-
-## Why the Visualizer?
-Terminal logs are great, but I wanted to actually *see* the distributed architecture in action. I built a minimalist, engineering-focused React dashboard that acts as a live telemetry monitor for the worker fleet.
-
-## The Stack
+## 🛠️ Tech Stack
 * **Backend:** Java 25, Spring Boot
-* **Locking & Data:** Redis, PostgreSQL, Docker
-* **Frontend:** React, Tailwind CSS, Framer Motion
+* **Infrastructure:** Redis (Distributed Lock), PostgreSQL (Task Queue), Docker
+* **Frontend:** React, Tailwind CSS, Framer Motion (Real-time Simulation)
 
-## Run it Yourself
-If you want to spin up the fleet and watch them race for the lock:
+## 🚀 Getting Started
 
-1. Start the database and cache: `docker-compose up -d`
-2. Boot the Java worker nodes: `./mvnw spring-boot:run`
-3. Launch the telemetry UI: `cd frontend && npm install && npm run dev`
+### 1. Start the Infrastructure
+```bash
+docker-compose up -d
