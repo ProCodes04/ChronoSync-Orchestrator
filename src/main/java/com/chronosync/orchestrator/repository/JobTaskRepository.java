@@ -9,6 +9,5 @@ import java.util.Optional;
 @Repository
 public interface JobTaskRepository extends JpaRepository<JobTask, Long> {
 
-    // Spring Data JPA magic: It dynamically writes the SQL based on this exact method name!
     Optional<JobTask> findFirstByStatusOrderByIdAsc(String status);
 }
