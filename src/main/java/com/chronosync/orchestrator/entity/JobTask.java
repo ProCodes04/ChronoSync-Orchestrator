@@ -19,12 +19,10 @@ public class JobTask {
 
     private LocalDateTime createdAt;
 
-    // Default constructor required by JPA
     public JobTask() {
         this.createdAt = LocalDateTime.now();
     }
 
-    // Standard Getters and Setters
     public Long getId() { return id; }
     public String getTaskName() { return taskName; }
     public void setTaskName(String taskName) { this.taskName = taskName; }
