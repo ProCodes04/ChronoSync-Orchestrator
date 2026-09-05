@@ -12,20 +12,17 @@ public class JobController {
     private final JobTaskRepository jobRepository;
     private final JobService jobService;
 
-    // Spring Inversion of Control injects both the DB proxy and our Custom Service
     public JobController(JobTaskRepository jobRepository, JobService jobService) {
         this.jobRepository = jobRepository;
         this.jobService = jobService;
     }
 
-    // Our previous endpoint to create jobs
     @PostMapping
     public JobTask submitJob(@RequestBody JobTask incomingJob) {
         incomingJob.setStatus("QUEUED");
         return jobRepository.save(incomingJob);
     }
 
-    // NEW ENDPOINT: Trigger the processing of a specific job
     @PostMapping("/{id}/process")
     public String processJob(@PathVariable Long id) {
         boolean success = jobService.processJobWithLock(id);
